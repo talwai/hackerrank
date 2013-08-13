@@ -76,6 +76,7 @@ def global_min():
     optimal_cost = UNDEFINED
 
     all_costs = [min_path(city,[],[]) for city in ALL_CITIES]
+    print len(all_costs) == len(OPTIMAL_COSTS)
     for i in xrange(len(all_costs)):
     	optimal_cost = OPTIMAL_COSTS[i] + all_costs[i]
         if optimal_cost < curr_min:
