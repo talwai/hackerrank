@@ -31,9 +31,7 @@ def get_min_construct(i, path = []):
     return construct[i].index(min(construct[i][k] for k in ALL_CITIES if k not in path))
 
 def get_min_manager(i, managers = []):
-    print "MANAGERS ARE ", managers
     ret = manage[i].index(min(manage[i][x] for x in ALL_CITIES if x not in managers))
-    print "Min manager for city ", i , "is ", ret
     return ret
 
 def get_optimal_managers(i, managers = [], cities = ALL_CITIES):
@@ -49,25 +47,24 @@ def get_optimal_managers(i, managers = [], cities = ALL_CITIES):
 
     total_sum = 0
 
-    max_man = max(manage[x][optimal_managers[x]] for x in cities)
-
     for x in cities:
         total_sum = total_sum + manage[x][optimal_managers[x]]
-    print "TOTAL SUM" , total_sum, optimal_managers
 
     return total_sum , optimal_managers
 
 def optimal_manage_cost(path):
-    print path[:-1]
+    print path
     total_sum, optimal_managers = min(get_optimal_managers(i, [], cities = path[:-1]) for i in path[:-1])
     return total_sum
 
 OPTIMAL_COSTS = []
+PATHS = []
 
 def min_path(i, path, managers):
     if len(path) == 0:
     	path.append(i)
     elif len(path) == NUM_CITIES:
+        PATHS.append(path)
         OPTIMAL_COSTS.append(optimal_manage_cost(path))
         return 0
     j = get_min_construct(i, path)
