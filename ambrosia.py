@@ -9,6 +9,15 @@ manage = [[0 for x in xrange(NUM_CITIES)] for x in xrange(NUM_CITIES)]
 
 UNDEFINED = 1000000
 min_cost = [[UNDEFINED for x in xrange(NUM_CITIES)] for x in xrange(NUM_CITIES)]
+managed = []
+
+
+class City:
+    def __init__ (self, id):
+        self.id = id
+        self.managed_by = -1
+        self.in_road = -1
+        self.out_road = -1
 
 ALL_CITIES = [x for x in xrange(NUM_CITIES)]
 
@@ -24,44 +33,36 @@ for i in range(1+NUM_CITIES,2*NUM_CITIES+1):
     for j in range(0,len(tokens)):
         manage [i-NUM_CITIES-1][j] = int(tokens[j])
 
+#for i in ALL_CITIES:
+	#construct[i][i] = UNDEFINED
 
-def direct_min_cost(i,j):
-    return min(construct[i][j] + manage[i][j], construct[j][i] + manage[j][i])
+def total_cost(i,j,k):
+    return construct[i][j] + manage[i][k]
 
-def intermediate_min_cost(i,j, cities = ALL_CITIES):
-    print cities, j
-    cities.remove(i)
-    return min([overall_min_cost(i,k) + overall_min_cost(k,j) for k in cities])
+def get_min_construct(i, path):
+    return construct[i].index(min(construct[i][k] for k in ALL_CITIES if k not in path))
 
-def overall_min_cost(i,j, cities = ALL_CITIES):
-    if i == j:
-    	return 0
-    return min(direct_min_cost(i,j),direct_min_cost(j,i),
-            intermediate_min_cost(i,j, cities),intermediate_min_cost(j,i, cities))
+def get_min_manager(i, managers):
+    return manage[i].index(min(manage[i][x] for x in ALL_CITIES if x not in managers))
 
-def min_path(i, cities):
-    cities.remove(i)
-
-    if not cities:
-    	return 0
-    else:
-        return min(min_cost[i][k] + min_path(k, cities) for k in cities)
-
-for i in xrange(NUM_CITIES):
-    for j in xrange(NUM_CITIES):
-    	min_cost[i][j] = direct_min_cost(i,j)
-
-
-for i in xrange(NUM_CITIES):
-    for j in xrange(NUM_CITIES):
-    	min_cost[i][j] = overall_min_cost(i,j)
+def min_path(i, path, managers):
+    if len(path) == 0:
+    	path.append(i)
+    elif len(path) == NUM_CITIES:
+        print path
+        print managers
+        return 0
+    j = get_min_construct(i, path)
+    k = get_min_manager(i, managers)
+    managers.append(k)
+    path.append(j)
+    return total_cost(i, j, k) + min_path(j,path,managers)
 
 def global_min():
-    return min(min_path(city, ALL_CITIES) for city in ALL_CITIES)
+    return min(min_path(city, [],[]) for city in ALL_CITIES)
 
-print construct[8][3] + manage[8][3]
 
-print direct_min_cost(8,3)
+
 print global_min()
 
 exit(0)
