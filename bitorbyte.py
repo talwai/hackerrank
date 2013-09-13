@@ -31,7 +31,6 @@ my_dict = {
 
 def trace_backward(array):
     count = 4
-
     while (count <= len(array)):
         if array[-count] > 127:
             count += 1
@@ -40,9 +39,6 @@ def trace_backward(array):
 
     return 1 if count % 2 == 0 else 2
 
-def greaterThan127(num):
-    return 1 if num > 127 else 0
-
 def sizeoflastchar(array):
     if len(array) <= 1:
         return len(array)
@@ -50,17 +46,24 @@ def sizeoflastchar(array):
     if array[-1] > 127:
     	return 2
     else:
-        if array[-2] < 127:
+        if array[-2] <= 127:
             return 1
         elif len(array) == 2:
             return 2
-
-        to_return = my_dict[int(str( greaterThan127(array[-3] ) )
-                            + str( greaterThan127(array[-2] ) ) ) ]
-        return trace_backward(array) if to_return == UNDEFINED else to_return
-
+        else:
+            if array[-3] > 127:
+                return trace_backward(array)
+            else:
+                return 2
 
 print "Size of last char in test_1 is %s" % str(sizeoflastchar(test_1)) #Should return 2
 print "Size of last char in test_1 is %s" % str(sizeoflastchar(test_2)) #Should return 1
 print "Size of last char in test_2 is %s" % str(sizeoflastchar(test_3)) #Should return 2
 print "Size of last char in test_3 is %s" % str(sizeoflastchar(test_4)) #Should return 1
+
+print
+
+print "Size of last char in test_1 is %s" % str(sizeoflastchar(test_5)) #Should return 2
+print "Size of last char in test_1 is %s" % str(sizeoflastchar(test_6)) #Should return 2
+print "Size of last char in test_2 is %s" % str(sizeoflastchar(test_7)) #Should return 1
+print "Size of last char in test_3 is %s" % str(sizeoflastchar(test_8)) #Should return 2
